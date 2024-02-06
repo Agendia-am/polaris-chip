@@ -46,11 +46,23 @@ export class PolarisChip extends LitElement {
     */
       :host {
         /* Always make sure that your element has a default way of being displayed */
-        display: block;
-      }
-    `;
+        display: flex;
+      } 
+      span {
+    background-color: orange;
+    color: black;
+    font-size: 24px;
+    padding: 16px;
+    margin: 8px;
   }
-
+  span:hover{
+    background-color: grey;
+    color: black;
+    transition: all .1s ease-in-out;
+    cursor: pointer;
+  }
+  `;
+  }
   /**
    * render method is specific to LitElement based code. Anything you write here
    * you can think of as what gets printed to the screen when the tag is used.
