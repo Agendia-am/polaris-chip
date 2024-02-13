@@ -17,6 +17,7 @@ export class MyCard extends LitElement {
     this.link = "#";
     this.image = "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Penn_State_Nittany_Lions_logo.svg/2560px-Penn_State_Nittany_Lions_logo.svg.png";
     this.text = "This is my VSCode card project";
+    this.fancy = false;
   }
 
   static get styles() {
@@ -101,7 +102,23 @@ export class MyCard extends LitElement {
         color: orange;
             background-color: red; 
         }
+        :host([fancy]) {
+          display: block;
+          background-color: pink;
+          border: 2px solid fuchsia;
+          box-shadow: 10px 5px 5px red;
+        }
     `;
+  }
+
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open") {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   render() {
@@ -111,10 +128,13 @@ export class MyCard extends LitElement {
         <img class="card-image" src="${this.image}">
     <p>${this.text}</p>
         
-        <button class="btn">
-    <a href="${this.link}">details</a>
-      </button>
-    </div>
+      <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+        <summary>Description</summary>
+        <div>
+          <slot>${this.description}</slot>
+        </div>
+      </details>
+     </div>
     `;
   }
 
@@ -124,8 +144,54 @@ export class MyCard extends LitElement {
       link: { type: String},
       image: { type: String},
       text: {type: String},
+      fancy: { type: Boolean, reflect: true }
     };
   }
 }
 
 globalThis.customElements.define(MyCard.tag, MyCard);
+
+const duplicateButton = document.querySelector('.duplicate');
+const changeTitleButton = document.querySelector('.changetitle');
+const changeImageButton = document.querySelector('.changeimage');
+const changeBgButton = document.querySelector('.changebg');
+const deleteButton = document.querySelector('.delete');
+
+const myCards = document.querySelectorAll('my-card');
+
+function duplicateCard() {
+  myCards.forEach(card => {
+      const duplicate = card.cloneNode(true);
+      card.parentNode.insertBefore(duplicate, card.nextSibling);
+  });
+}
+
+function changeTitle() {
+  if (myCards.length > 0) {
+      myCards[0].title = "I saw Usher perform at the super bowl";
+  }
+}
+
+function changeImage() {
+  if (myCards.length > 0) {
+      myCards[0].image = "https://media.istockphoto.com/id/182466618/photo/fruit-ring-breakfast-cereal.jpg?s=1024x1024&w=is&k=20&c=Vz2edH1jpzkT1-GGNsQAITk1XjU4HWhTZuRzp1KcXW8=";
+  }
+}
+
+function changeBackground() {
+  if (myCards.length > 0) {
+      myCards[0].style.backgroundColor = "red";
+  }
+}
+
+function deleteCard() {
+  if (myCards.length > 1) {
+      myCards[0].remove();
+  }
+}
+
+duplicateButton.addEventListener('click', duplicateCard);
+changeTitleButton.addEventListener('click', changeTitle);
+changeImageButton.addEventListener('click', changeImage);
+changeBgButton.addEventListener('click', changeBackground);
+deleteButton.addEventListener('click', deleteCard);
