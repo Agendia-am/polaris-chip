@@ -180,12 +180,12 @@ function changeImage() {
 
 function changeBackground() {
   if (myCards.length > 0) {
-      myCards[0].style.backgroundColor = "red";
+      myCards[0].style.backgroundColor = red;
   }
 }
 
 function deleteCard() {
-  if (myCards.length > 1) {
+  if (myCards.length > 0) {
       myCards[0].remove();
   }
 }
