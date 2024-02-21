@@ -16,8 +16,6 @@ export class CounterApp extends LitElement {
 
   static get styles() {
     return css`
-
-
         :host {
             align-items: center;
         }
@@ -79,33 +77,35 @@ export class CounterApp extends LitElement {
       }
     `;
   }
-          
-   add() {
+
+  add() {
     if (this.number < this.max) {
-        this.number +=1;
+        this.number += 1;
         if (this.number === 21) {
             this.makeItRain();
-    }
-   }
-   subtract() {
-    if (this.number > this.min) {
-        this.number -=1;
-        if (this.number === 21) {
-            this.makeItRain();
-    }
-    makeItRain() {
-        if (this.number === 21) {
-          import("@lrnwebcomponents/multiple-choice/lib/confetti-container.js").then(
-            (module) => {
-              setTimeout(() => {
-                this.shadowRoot.querySelector("#confetti").setAttribute("popped", "");
-              }, 0);
-            }
-          );
         }
+    }
+  }
+
+  subtract() {
+    if (this.number > this.min) {
+        this.number -= 1;
+        if (this.number === 21) {
+            this.makeItRain();
+        }
+    }
+  }
+
+  makeItRain() {
+    import("@lrnwebcomponents/multiple-choice/lib/confetti-container.js").then(
+      (module) => {
+        setTimeout(() => {
+          this.shadowRoot.querySelector("#confetti").setAttribute("popped", "");
+        }, 0);
       }
-   
-   
+    );
+  }
+
   render() {
     let numberColorClass = '';
     if (this.number === 18) {
@@ -117,6 +117,7 @@ export class CounterApp extends LitElement {
     }
 
     return html`
+    <confetti-container id="confetti">
     <div class="card">
       <div class="counter-app">
         <h1 class="number ${numberColorClass}">${this.number}</h1>
@@ -125,7 +126,7 @@ export class CounterApp extends LitElement {
         <confetti-container id="confetti"></confetti-container>
     </div>
     </div>
-
+    </confetti-container>
     `;
   }
 
@@ -135,6 +136,7 @@ export class CounterApp extends LitElement {
       min: { type: Number, reflect: true},
       max: { type: Number, reflect: true},
     };
+  }
 }
-    } 
+
 globalThis.customElements.define(CounterApp.tag, CounterApp);
