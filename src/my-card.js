@@ -36,7 +36,7 @@ export class MyCard extends LitElement {
         }
         .btn {
           background-color: yellow;
-          color: black;
+          color: yellow;
           font-size: 20px;
           border-radius: 10%;
           padding: 16px 16px 16px 16px;
