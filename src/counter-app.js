@@ -44,6 +44,10 @@ export class CounterApp extends LitElement {
           color: pink;
         }
 
+        .green {
+          color: green;
+        }
+
         .plus {
           background-color: red;
           color: black;
@@ -75,6 +79,10 @@ export class CounterApp extends LitElement {
         button:hover {
         background-color: limegreen;
       }
+      button:focus {
+  background-color: limegreen;
+}
+
     `;
   }
 
@@ -112,6 +120,8 @@ export class CounterApp extends LitElement {
       numberColorClass = 'yellow';
     } else if (this.number === 21) {
       numberColorClass = 'blue';
+    } else if (this.number === 25) {
+      numberColorClass = 'green';
     } else if (this.number === this.min) {
       numberColorClass = 'pink';
     }
