@@ -82,7 +82,6 @@ export class CounterApp extends LitElement {
       button:focus {
   background-color: limegreen;
 }
-
     `;
   }
 
