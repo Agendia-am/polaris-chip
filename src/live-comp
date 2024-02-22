@@ -13,9 +13,7 @@ export class LiveComp extends LitElement {
 
   constructor() {
     super();
-    this.title = "My card";
-    this.link = "#";
-    this.image = "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Penn_State_Nittany_Lions_logo.svg/2560px-Penn_State_Nittany_Lions_logo.svg.png";
+    this.title = "***ALERT!!!";
     this.text = "This message is an alert demo for my live comp project";
     this.fancy = false;
   }
