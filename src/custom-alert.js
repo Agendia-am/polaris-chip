@@ -1,9 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-/**
- * Now it's your turn. Here's what we need to try and do
- * 1. 
- */
+
 
 export class CustomAlert extends LitElement {
 
