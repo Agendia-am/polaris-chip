@@ -15,6 +15,7 @@ export class CustomAlert extends LitElement {
     this.description = "Pay attention to this important message!!!"
     this.open = false;
     this.sticky = false;
+    this.color = "red";
   }
 
   static get styles() {
@@ -28,7 +29,6 @@ export class CustomAlert extends LitElement {
         }
 
         .card{
-          background-color:red;
           height: 150px;
           width: 1430px;
           border-radius: 0%;
@@ -53,6 +53,7 @@ export class CustomAlert extends LitElement {
         :host([sticky]) {
            position: sticky;
            top: 0;
+           z-index: 20;
         }
     `;
   }
@@ -66,12 +67,17 @@ export class CustomAlert extends LitElement {
       this.open = false;
     }
   }
+  
+  toggleOpen() {
+    this.open = !this.open;
+  }
 
-  render() {
+
+  openView(){
     return html`
-      <div class="card">
+      <div class="card" style="background-color:${this.color}">
       <h1 class="cardtitle"> ${this.title} </h1>
-      <button class="button">exit</button>
+      <button class="button" @click="${this.toggleOpen}"></button>
         <div>
           <slot>${this.description}</slot>
         </div>
@@ -80,12 +86,37 @@ export class CustomAlert extends LitElement {
     `;
   }
 
+
+  closedView(){
+    return html`
+        <div class="card" style="background-color:${this.color}">
+          <button class="button" @click="${this.toggleOpen}"></button>
+     </div>
+    
+    `;
+  }
+
+
+  render() {
+      // return (open) ? this.openView() : this.closedView;
+
+    if(this.open){
+      return this.openView();
+    }
+    else{
+      return this.closedView();
+    }
+
+  }
+
   static get properties() {
     return {
       title: { type: String },
       text: {type: String},
-      open: {type: Boolean, reflect: true }
-      sticky: {type: Boolean, reflect: true}
+      description: {type: String},
+      open: {type: Boolean, reflect: true},
+      sticky: {type: Boolean, reflect: true },
+      color: {type: String},
     };
   }
 }
