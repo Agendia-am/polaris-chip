@@ -29,7 +29,7 @@ export class CustomAlert extends LitElement {
         }
 
         .card{
-          height: 150px;
+          height: 130px;
           width: 1430px;
           border-radius: 0%;
           margin: 8px;
