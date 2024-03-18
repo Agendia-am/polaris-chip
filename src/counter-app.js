@@ -70,7 +70,7 @@ export class CounterApp extends LitElement {
         }
         
         .card{
-          background-color: gray;
+          background-color: tan;
           height: 460px;
           width: 400px;
           border-radius: 0%;
