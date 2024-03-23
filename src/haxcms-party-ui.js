@@ -1,4 +1,4 @@
-import "@lrnwebcomponents/rpg-character/rpg-character.js";
+
 import { DDD } from "@lrnwebcomponents/d-d-d/d-d-d.js";
 import { html, css } from "lit";
 
