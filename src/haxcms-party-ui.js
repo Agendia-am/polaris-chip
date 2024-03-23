@@ -21,17 +21,24 @@ export class HaxcmsPartyUi extends DDD {
         :host {
           
           display: center;
+          
         }
         .container {
-          background-color: #f2f2f2;
+          background-color: #dce4f5;
           padding: 20px;
-          width: 1380px;
-          height: 620px;
+          width: 600px;
+          height: 500px;
           
+          @media screen and (max-width: 600px) {
+  .container {
+    padding: 10px; 
+    
+  }
         }
         .button-panel {
           display: flex;
-          margin-left: 1000px;
+          margin-left: 280px;
+          
           
         }
 
