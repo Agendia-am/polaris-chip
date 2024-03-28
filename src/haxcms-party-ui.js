@@ -17,7 +17,7 @@ export class HaxcmsPartyUi extends DDD {
   }
 
   static get styles() {
-    return [
+    return [``
       super.styles,
       css`
         :host {
