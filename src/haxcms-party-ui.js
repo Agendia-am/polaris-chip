@@ -215,7 +215,7 @@ export class HaxcmsPartyUi extends DDD {
     } else {
       window.alert("Input cannot be empty.");
     }
-    
+  }
   displayItem(item) {
     return html`<rpg-character seed="${item}"></rpg-character>`;
   }
