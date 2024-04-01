@@ -185,7 +185,15 @@ export class HaxcmsPartyUi extends DDD {
     const sanitizedValue = inputValue.replace(/[^a-z0-9]/g, "");
     event.target.value = sanitizedValue.slice(0, 10); // Limit to 10 characters
   }
-
+  removeItem() {
+    if (this.party.length > 1) {
+      this.party = this.party.remove(0, -1); // Remove the last item
+      this.changed = true; // Set changed flag to true
+      this.requestUpdate(); // Trigger a re-render
+    } else {
+      alert("You cannot remove the last party member.");
+    }
+  }
   addItem() {
     const input = document.querySelector(".search-input").value;
     // Validate if input is not empty
