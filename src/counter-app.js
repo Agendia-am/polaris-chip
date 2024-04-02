@@ -74,7 +74,7 @@ export class CounterApp extends LitElement {
           height: 460px;
           width: 400px;
           border-radius: 0%;
-          margin: 8px;
+          margin: 200px;
         }
         button:hover {
         background-color: limegreen;
