@@ -136,7 +136,7 @@ export class HaxcmsPartyUi extends DDD {
                 placeholder="Search party member..."
               />
               <button class="add-button" @click="${this.addUser}">Add</button>
-              <button class="remove-button" @click="${this.remove}">
+              <button class="remove-button" @click="${this.removeItem}">
                 Remove
               </button>
             </div>
@@ -187,9 +187,11 @@ export class HaxcmsPartyUi extends DDD {
   }
   removeItem() {
     if (this.party.length > 1) {
-      this.party = this.party.remove(0, -1); // Remove the last item
+      //this.party = this.party.remove(0, -1); // Remove the last item
+      this.party.pop();
+      console.log(this.party)
       this.changed = true; // Set changed flag to true
-      this.requestUpdate(); // Trigger a re-render
+      this.requestUpdate(); 
     } else {
       alert("You cannot remove the last party member.");
     }
