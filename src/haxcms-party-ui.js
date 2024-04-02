@@ -134,6 +134,7 @@ export class HaxcmsPartyUi extends DDD {
                 type="search"
                 class="search-input"
                 placeholder="Search party member..."
+                @input="${this.handleInput}"
               />
               <button class="add-button" @click="${this.addUser}">Add</button>
               <button class="remove-button" @click="${this.removeItem}">
@@ -185,19 +186,18 @@ export class HaxcmsPartyUi extends DDD {
     const sanitizedValue = inputValue.replace(/[^a-z0-9]/g, "");
     event.target.value = sanitizedValue.slice(0, 10); // Limit to 10 characters
   }
-  removeItem() {
+removeItem() {
     if (this.party.length > 1) {
-      //this.party = this.party.remove(0, -1); // Remove the last item
-      this.party.pop();
-      console.log(this.party)
-      this.changed = true; // Set changed flag to true
-      this.requestUpdate(); 
+        this.party.pop();
+        console.log(this.party)
+        this.changed = true;
+        this.requestUpdate();
     } else {
-      alert("You cannot remove the last party member.");
+        alert("You cannot remove the last party member");
     }
-  }
+}
   addItem() {
-    const input = document.querySelector(".search-input").value;
+    const input = this.shadowRoot.querySelector(".search-input").value;
     // Validate if input is not empty
     if (input.trim() !== "") {
       // Add only if the party size is less than 5
