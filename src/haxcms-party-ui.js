@@ -17,7 +17,9 @@ export class HaxcmsPartyUi extends DDD {
     /** tags on th chracters */
     /* make the characters walk when save party is pressed */
     /* make the characters walk when add is pressed */
+    this.minPartySize = 5;
     this.changed = false;
+    this.saved = false;
     this.party =
       localStorage.getItem("party") != null
         ? localStorage.getItem("party").split(",")
@@ -32,8 +34,8 @@ export class HaxcmsPartyUi extends DDD {
           display: center;
         }
         .block {
-          width: var(--haxcms-party-ui-container, 90vw);
-          padding: var(--ddd-spacing-);
+          width: var(--haxcms-party-ui-container, 95vw);
+          padding: var(--ddd-spacing-6);
           background-color: var(--ddd-theme-default-roarMaxlight);
         }
 
@@ -49,7 +51,9 @@ export class HaxcmsPartyUi extends DDD {
           font-family: "Press Start 2P", system-ui;
           background-color: (var(--ddd-theme-default-roarMaxlight), white);
           color: var(--ddd-theme-default-beaverBlue);
-          margin: 0px 0px -50px 30px;
+          margin: 0px 0px 50px 30px;
+          text-align: center;
+          animation: blinker 1s linear infinite;
         }
 
         .button-panel {
@@ -58,13 +62,14 @@ export class HaxcmsPartyUi extends DDD {
         }
         .party {
           display: inline-flexbox;
-          max-width: var(--haxcms-party-ui-party-width,90vw);
+          max-width: var(--haxcms-party-ui-party-width, 90vw);
           height: var(--haxcms-party-ui-party-height, 300px);
           margin: var(--ddd-spacing-5);
           color: var(--ddd-theme-default-roarMaxlight);
+          text-align: center;
         }
 
-        .search-input {
+        #search-input {
           font-family: "Press Start 2P", system-ui;
           font-size: var(--ddd-font-size-3xs);
           min-width: 200px;
@@ -88,18 +93,18 @@ export class HaxcmsPartyUi extends DDD {
             0 5px 0 0 black;
         }
 
-        .remove-button { 
+        .remove-button {
           font-family: "Press Start 2P", system-ui;
           font-size: var(--ddd-font-size-3xs);
           min-width: 150px;
           margin: var(--ddd-spacing-3);
           padding: var(--ddd-spacing-5);
           background-color: var(--ddd-theme-default-original87Pink);
-          color:var(--ddd-theme-default-slateMaxLight);
+          color: var(--ddd-theme-default-slateMaxLight);
           box-shadow: -5px 0 0 0 black, 5px 0 0 0 black, 0 -5px 0 0 black,
             0 5px 0 0 black;
         }
-        .save-button { 
+        .save-button {
           font-family: "Press Start 2P", system-ui;
           font-size: var(--ddd-font-size-3xs);
           min-width: 150px;
@@ -115,12 +120,14 @@ export class HaxcmsPartyUi extends DDD {
           background-color: var(--ddd-theme-default-keystoneYellow);
           color: var(--ddd-theme-default-potentialMidnight);
         }
+
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
+        }
       `,
     ];
-  }
-
-  deleteData() {
-    localStorage.removeItem("party");
   }
 
   render() {
@@ -132,12 +139,11 @@ export class HaxcmsPartyUi extends DDD {
             <div class="button-panel">
               <input
                 type="search"
-                class="search-input"
+                id="search-input"
                 placeholder="Search party member..."
-                @input="${this.handleInput}"
               />
               <button class="add-button" @click="${this.addUser}">Add</button>
-              <button class="remove-button" @click="${this.removeItem}">
+              <button class="remove-button" @click="${this.removeItem}" >
                 Remove
               </button>
             </div>
@@ -153,40 +159,7 @@ export class HaxcmsPartyUi extends DDD {
       </confetti-container>
     `;
   }
-
-  addUser() {
-    /*
-    const searchInput = document.querySelector(".search-input");
-    this.party = [...this.party, searchInput.value.toString()];
-    this.makeItRain();
-    
-    */
-    this.party = [...this.party, null];
-    this.changed = true;
-  }
-
-  saveData() {
-    if (this.changed) {
-      const myArray = this.party.toString();
-      localStorage.setItem("party", myArray);
-      console.log(localStorage.getItem("party").split(","));
-      this.makeItRain();
-    } else {
-      localStorage.removeItem("party");
-    }
-  }
-
-  remove() {
-    this.changed = false;
-  }
-
-  handleInput(event) {
-    const inputValue = event.target.value;
-    // Remove any characters that are not lowercase letters or numbers (Adam's Notes)
-    const sanitizedValue = inputValue.replace(/[^a-z0-9]/g, "");
-    event.target.value = sanitizedValue.slice(0, 10); // Limit to 10 characters
-  }
-removeItem() {
+  removeItem() {
     if (this.party.length > 1) {
         this.party.pop();
         console.log(this.party)
@@ -196,38 +169,55 @@ removeItem() {
         alert("You cannot remove the last party member");
     }
 }
-  addItem() {
-    const input = this.shadowRoot.querySelector(".search-input").value;
-    // Validate if input is not empty
-    if (input.trim() !== "") {
-      // Add only if the party size is less than 5
-      if (this.party.length < 5) {
-        // Add to party if input matches criteria
-        if (/^[a-z0-9]{1,10}$/.test(input)) {
-          // Check if the user is already in the party
-          if (!this.party.includes(input)) {
-            // Display confirmation alert
-            const confirmed = window.confirm(`Add ${input} to the party?`);
-            if (confirmed) {
-              this.party = [...this.party, input];
-            }
-          } else {
-            window.alert("User is already in the party.");
-          }
+  addUser() {
+    const input = this.shadowRoot.getElementById("search-input");
+    const username = input.value.trim();
+
+    /* if the party is less than 5, add the user */
+    if (username !== "") {
+      if (/^[a-z0-9]{1,10}$/.test(username)) {
+        if (!this.party.includes(username)) {
+          this.party = [...this.party, username];
+          this.toggleChanged();
+          var audio = new Audio("media\coin sound.wav");
+          audio.play();
         } else {
-          window.alert(
-            "Input must contain only lowercase letters and numbers, with no spaces and maximum length of 10 characters."
-          );
+          window.alert("Username is already in the party.");
         }
       } else {
-        window.alert("Party is full.");
+        window.alert("Username must be lowercase and numbers only.");
       }
-    } else {
-      window.alert("Input cannot be empty.");
     }
   }
+
+  toggleChanged() {
+    this.changed = !this.changed;
+  }
+
+  deleteData() {
+    localStorage.removeItem("party");
+  }
+
+  saveData() {
+    if (this.changed) {
+      const myArray = this.party.toString();
+      localStorage.setItem("party", myArray);
+      console.log(localStorage.getItem("party").split(","));
+      this.saved = true;
+      var audio = new Audio("media\coin sound.wav");
+      audio.play();
+      this.makeItRain();
+    } else {
+      localStorage.removeItem("party");
+    }
+  }
+
   displayItem(item) {
-    return html`<rpg-character seed="${item}"></rpg-character>`;
+    if (this.saved) {
+      return html`<rpg-character walking seed="${item}"></rpg-character>`;
+    } else {
+      return html`<rpg-character seed="${item}"></rpg-character>`;
+    }
   }
 
   makeItRain() {
@@ -242,6 +232,9 @@ removeItem() {
 
   static get properties() {
     return {
+      ...super.properties,
+      changed: { type: Boolean, reflect: true },
+      saved: { type: Boolean, reflect: true },
       party: { type: Array, reflect: true },
     };
   }
