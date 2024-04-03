@@ -180,6 +180,7 @@ export class HaxcmsPartyUi extends DDD {
       localStorage.setItem("party", myArray);
       console.log(localStorage.getItem("party").split(","));
       this.makeItRain();
+      this.changed = false;
     } else {
       localStorage.removeItem("party");
     }
