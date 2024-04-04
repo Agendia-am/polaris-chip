@@ -59,7 +59,7 @@ export class HaxcmsPartyUi extends DDD {
           margin-left: var(--ddd-spacing-4);
         }
         .party {
-          display: inline-flexbox;
+          display: flex;
           max-width: var(--haxcms-party-ui-party-width,90vw);
           height: var(--haxcms-party-ui-party-height, 300px);
           margin: var(--ddd-spacing-5);
@@ -134,34 +134,30 @@ export class HaxcmsPartyUi extends DDD {
 
   render() {
     return html`
-      <confetti-container id="confetti">
-        <div class="block">
-          <h1 class="title">CHOOSE YOUR PARTY</h1>
-          <div class="container">
-            <div class="button-panel">
-              <input
-                type="search"
-                class="search-input"
-                placeholder="Search party member..."
-                @input="${this.handleInput}"
-              />
-              <button class="add-button" @click="${this.addUser}">Add</button>
-              <button class="remove-button" @click="${this.removeItem}">
-                Remove
-              </button>
+        <confetti-container id="confetti">
+            <div class="block">
+                <h1 class="title">CHOOSE YOUR PARTY</h1>
+                <div class="container">
+                    <div class="button-panel">
+                        <input
+                            type="search"
+                            class="search-input"
+                            placeholder="Search party member..."
+                            @input="${this.handleInput}"
+                        />
+                        <button class="add-button" @click="${this.addUser}">Add</button>
+                    </div>
+                    <div class="party">
+                        ${this.party.map((item, index) => this.displayItem(item, index))}
+                    </div>
+                    <button class="save-button" @click="${this.saveData}">
+                        Save Party Members
+                    </button>
+                </div>
             </div>
-            <div class="party">
-              ${this.party.map((item) => this.displayItem(item))}
-              <!-- this is property drilling. not the best idea-->
-            </div>
-            <button class="save-button" @click="${this.saveData}">
-              Save Party Members
-            </button>
-          </div>
-        </div>
-      </confetti-container>
+        </confetti-container>
     `;
-  }
+}
 
   addUser() {
     /*
@@ -196,10 +192,9 @@ export class HaxcmsPartyUi extends DDD {
     const sanitizedValue = inputValue.replace(/[^a-z0-9]/g, "");
     event.target.value = sanitizedValue.slice(0, 10); // Limit to 10 characters
   }
-removeItem() {
+  removeItem(index) {
     if (this.party.length > 1) {
-        this.party.pop();
-        console.log(this.party)
+        this.party.splice(index, 1);
         this.changed = true;
         this.requestUpdate();
     } else {
@@ -236,9 +231,14 @@ removeItem() {
       window.alert("Input cannot be empty.");
     }
   }
-  displayItem(item) {
-    return html`<rpg-character seed="${item}"></rpg-character>`;
-  }
+  displayItem(item, index) {
+    return html`
+        <div class="character-container">
+            <rpg-character seed="${item}"></rpg-character>
+            <button class="remove-button" @click="${() => this.removeItem(index)}">Remove</button>
+        </div>
+    `;
+}
 
   makeItRain() {
     import("@lrnwebcomponents/multiple-choice/lib/confetti-container.js").then(
