@@ -9,19 +9,8 @@ export class HaxcmsPartyUi extends DDD {
 
   constructor() {
     super();
-    /* keydown event for the search bar, using logkey?*/
-    /* make the writing in the sarch bar destaurated */
-    /* make it have sounds when we write */
-    /* make the button have a sound when we click it */
-    /* use in put event */
-    /** tags on th chracters */
-    /* make the characters walk when save party is pressed */
-    /* make the characters walk when add is pressed */
-    this.changed = false;
-    this.party =
-      localStorage.getItem("party") != null
-        ? localStorage.getItem("party").split(",")
-        : ["zpg"];
+    this.party = ["testUser"];
+    this.textInput = '';
   }
 
   static get styles() {
@@ -58,13 +47,9 @@ export class HaxcmsPartyUi extends DDD {
           display: flex;
           margin-left: var(--ddd-spacing-4);
         }
+
         .party {
           display: flex;
-          max-width: var(--haxcms-party-ui-party-width,90vw);
-          height: var(--haxcms-party-ui-party-height, 300px);
-          margin: var(--ddd-spacing-5);
-          color: var(--ddd-theme-default-roarMaxlight);
-          text-align: center;
         }
 
         .search-input {
@@ -124,121 +109,86 @@ export class HaxcmsPartyUi extends DDD {
             opacity: 0;
           }
         }
-      `,
-    ];
+    `];
   }
 
-  deleteData() {
-    localStorage.removeItem("party");
+  handleInput(event) {
+    const textInput = event.target.value;
+
+    if (this.textInput.length > 10) { // setting a character limit
+      event.target.value = textInput.slice(0, 10);
+    } else {
+      const invalidCharacters = textInput.match(/[^a-z0-9]/g);
+      if (!invalidCharacters) { // checking if there no invalid characters
+        this.textInput = textInput; // do nothing to the text
+      } else if (invalidCharacters) { // checking if there are invalid characters
+        alert('ERROR: You have entered invalid characters.');
+        event.target.value = textInput.replace(invalidCharacters[0], ''); // replacing invalid character with a space
+      }
+    }
+  }
+
+  addUser() {
+    if (this.textInput == '') { //checking if the textinput is empty
+      alert('ERROR: Cannot add empty users.');
+    } else { // if not empty
+      if (this.party.includes(this.textInput)) { //checking if user is already in party
+        alert('ERROR: User is already in party.');
+      } else {
+        this.party = [...this.party, this.textInput]; // adding user to party
+      }
+    }
+  }
+
+  removeUser(u) {
+    const i = this.party.indexOf(u);
+
+    if (i !== -1) {
+      this.party.splice(i, 1);
+      this.party = [...this.party];
+    }   
+  }
+
+  saveData() {
+    alert('Saved party');
+    this.makeItRain();  
   }
 
   render() {
     return html`
-        <confetti-container id="confetti">
-            <div class="block">
-                <h1 class="title">CHOOSE YOUR PARTY</h1>
-                <div class="container">
-                    <div class="button-panel">
-                        <input
-                            type="search"
-                            class="search-input"
-                            placeholder="Search party member..."
-                            @input="${this.handleInput}"
-                        />
-                        <button class="add-button" @click="${this.addUser}">Add</button>
-                    </div>
-                    <div class="party">
-                        ${this.party.map((item, index) => this.displayItem(item, index))}
-                    </div>
-                    <button class="save-button" @click="${this.saveData}">
-                        Save Party Members
-                    </button>
-                </div>
+      <confetti-container id="confetti">
+        <div class="block">
+          <h1 class="title">CHOOSE YOUR PARTY</h1>
+          <div class="container">
+            <div class="button-panel">
+              <input
+                type="search"
+                class="search-input"
+                placeholder="Search party member..."
+                .value="${this.textInput}"
+                @input="${this.handleInput}"
+              />
+              <button class="add-button" @click="${this.addUser}">Add</button>
             </div>
-        </confetti-container>
-    `;
-}
-
-  addUser() {
-    /*
-    const searchInput = document.querySelector(".search-input");
-    this.party = [...this.party, searchInput.value.toString()];
-    this.makeItRain();
-    
-    */
-    this.party = [...this.party, null];
-    this.changed = true;
-  }
-
-  saveData() {
-    if (this.changed) {
-      const myArray = this.party.toString();
-      localStorage.setItem("party", myArray);
-      console.log(localStorage.getItem("party").split(","));
-      this.makeItRain();
-      this.changed = false;
-    } else {
-      localStorage.removeItem("party");
-    }
-  }
-
-  remove() {
-    this.changed = false;
-  }
-
-  handleInput(event) {
-    const inputValue = event.target.value;
-    // Remove any characters that are not lowercase letters or numbers (Adam's Notes)
-    const sanitizedValue = inputValue.replace(/[^a-z0-9]/g, "");
-    event.target.value = sanitizedValue.slice(0, 10); // Limit to 10 characters
-  }
-  removeItem(index) {
-    if (this.party.length > 1) {
-        this.party.splice(index, 1);
-        this.changed = true;
-        this.requestUpdate();
-    } else {
-        alert("You cannot remove the last party member");
-    }
-}
-  addItem() {
-    const input = this.shadowRoot.querySelector(".search-input").value;
-    // Validate if input is not empty
-    if (input.trim() !== "") {
-      // Add only if the party size is less than 5
-      if (this.party.length < 5) {
-        // Add to party if input matches criteria
-        if (/^[a-z0-9]{1,10}$/.test(input)) {
-          // Check if the user is already in the party
-          if (!this.party.includes(input)) {
-            // Display confirmation alert
-            const confirmed = window.confirm(`Add ${input} to the party?`);
-            if (confirmed) {
-              this.party = [...this.party, input];
-            }
-          } else {
-            window.alert("User is already in the party.");
-          }
-        } else {
-          window.alert(
-            "Input must contain only lowercase letters and numbers, with no spaces and maximum length of 10 characters."
-          );
-        }
-      } else {
-        window.alert("Party is full.");
-      }
-    } else {
-      window.alert("Input cannot be empty.");
-    }
-  }
-  displayItem(item, index) {
-    return html`
-        <div class="character-container">
-            <rpg-character seed="${item}"></rpg-character>
-            <button class="remove-button" @click="${() => this.removeItem(index)}">Remove</button>
+          <div>
+            <p><span>Current Users:</span></p>        
+            <div class="party">
+              ${this.party.map(user => html`
+                <div class="rpg-container">
+                  <rpg-character seed="${user}"></rpg-character>
+                  <p>${user}</p>
+                  <button class="remove-button" @click="${() => this.removeUser(user)}">Remove</button>
+                </div>
+              `)}       
+            </div>
+            <button class="save-button" @click="${this.saveData}">
+              Save Party Members
+            </button>
+          </div>
         </div>
+      </confetti-container>
     `;
-}
+  }
 
   makeItRain() {
     import("@lrnwebcomponents/multiple-choice/lib/confetti-container.js").then(
@@ -253,6 +203,7 @@ export class HaxcmsPartyUi extends DDD {
   static get properties() {
     return {
       party: { type: Array, reflect: true },
+      textInput: { type: String },
     };
   }
 }
