@@ -9,7 +9,7 @@ export class HaxcmsPartyUi extends DDD {
 
   constructor() {
     super();
-    this.party = ["testUser"];
+    this.party = [];
     this.textInput = '';
   }
 
@@ -109,6 +109,9 @@ export class HaxcmsPartyUi extends DDD {
             opacity: 0;
           }
         }
+        @media (min-width: 768px) {
+          .container {
+            width: 70%;
     `];
   }
 
