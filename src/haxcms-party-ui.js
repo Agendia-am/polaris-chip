@@ -109,9 +109,9 @@ export class HaxcmsPartyUi extends DDD {
             opacity: 0;
           }
         }
-        @media (min-width: 768px) {
+        @media screen and (min-width: 600px) {
           .container {
-            width: 70%;
+            width: 65%;
     `];
   }
 
