@@ -111,7 +111,7 @@ export class HaxcmsPartyUi extends DDD {
         }
         @media screen and (min-width: 600px) {
           .container {
-            width: 65%;
+            width: 90%;
     `];
   }
 
